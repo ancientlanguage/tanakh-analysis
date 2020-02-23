@@ -1,0 +1,43 @@
+cabal-version: 2.2
+
+name: tanakh
+version: 1.0
+
+common deps
+  default-language: Haskell2010
+  ghc-options:
+    -Wall
+    -Werror
+    -Wincomplete-uni-patterns
+    -Wincomplete-record-updates
+    -O2
+  build-depends:
+      base
+    , bytestring
+    , optparse-generic
+    , text
+
+library
+  import: deps
+  hs-source-dirs: haskell/src
+  exposed-modules:
+    Tanakh
+
+executable tanakh
+  import: deps
+  hs-source-dirs: haskell/app
+  main-is: Main.hs
+  ghc-options:
+    -threaded
+    -rtsopts
+    -with-rtsopts=-T
+  build-depends: tanakh
+
+test-suite test
+  import: deps
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  hs-source-dirs: haskell/test
+  build-depends:
+      tanakh
+    , hedgehog
