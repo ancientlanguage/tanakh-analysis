@@ -16,6 +16,7 @@ common deps
     , bytestring
     , optparse-generic
     , text
+    , X11
 
 library
   import: deps

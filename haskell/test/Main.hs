@@ -19,19 +19,16 @@ main = do
         ]
   Control.Monad.unless isSuccess System.Exit.exitFailure
 
-genSumDepth :: Int -> Int -> Hedgehog.Gen Tanakh.Sum
-genSumDepth unitCount _depth | unitCount == 0 = return $ Tanakh.Sum []
-genSumDepth _unitCount depth | depth == 0 = return Tanakh.Unit -- might not match unitCount
-genSumDepth unitCount depth | depth == 1 = return $ Tanakh.Sum $ take unitCount $ repeat Tanakh.Unit
-genSumDepth _unitCount _depth = do
-  _listLength <- Hedgehog.Gen.integral @_ @Int $ Hedgehog.Range.linear 1 10
-  undefined -- TODO: pick distribution of units across tree of given depth
-
 genSum :: Hedgehog.Gen Tanakh.Sum
 genSum = do
-  unitCount <- Hedgehog.Gen.integral @_ @Int $ Hedgehog.Range.linear 0 100
-  treeDepth <- Hedgehog.Gen.integral @_ @Int $ Hedgehog.Range.linear 0 5
-  genSumDepth unitCount treeDepth
+  depthOption <- Hedgehog.Gen.integral @_ @Int $ Hedgehog.Range.linear 0 2
+  case depthOption of
+    0 -> return $ Tanakh.Sum []
+    1 -> return $ Tanakh.Sum [Tanakh.Unit]
+    _ -> do
+      listLength <- Hedgehog.Gen.integral @_ @Int $ Hedgehog.Range.linear 0 10
+      children <- traverse (const genSum) [1..listLength]
+      return $ Tanakh.Sum children
 
 toNatAndBackPreservesValue :: Hedgehog.Property
 toNatAndBackPreservesValue = Hedgehog.property $ do
