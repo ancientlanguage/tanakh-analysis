@@ -24,7 +24,7 @@ genSum = do
     0 -> return $ Ideas.Sum []
     1 -> return $ Ideas.Sum [Ideas.Unit]
     _ -> do
-      listLength <- Hedgehog.Gen.integral @_ @Int $ Hedgehog.Range.linear 0 10
+      listLength <- Hedgehog.Gen.integral @_ @Int $ Hedgehog.Range.linear 0 5
       children <- traverse (const genSum) [1..listLength]
       return $ Ideas.Sum children
 
