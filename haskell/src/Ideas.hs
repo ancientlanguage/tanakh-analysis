@@ -1,4 +1,4 @@
-module Tanakh where
+module Ideas where
 
 import GHC.Natural (Natural)
 
@@ -91,6 +91,3 @@ normalizeSum input =
     [] -> Sum []
     [Unit] -> Unit
     many@(_ : _) -> Sum many
-
-main :: IO ()
-main = putStrLn "hello!"

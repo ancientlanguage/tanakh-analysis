@@ -22,7 +22,7 @@ library
   import: deps
   hs-source-dirs: haskell/src
   exposed-modules:
-    Tanakh
+    Ideas
 
 executable tanakh
   import: deps
