@@ -15,10 +15,7 @@ jobs:
         ghc-version: '8.8.2'
     - name: Install dependencies
       run: |
-        stack build ${ARGS} --only-dependencies
-    - name: Build
-      run: |
-        stack build ${ARGS}
-    - name: Test
+        stack test ${ARGS} --only-dependencies
+    - name: Build and test
       run: |
         stack test ${ARGS}
