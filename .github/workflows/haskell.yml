@@ -1,18 +1,6 @@
 name: Haskell CI
 
-on:
-  push:
-    paths:
-    - 'haskell/**'
-    - 'stack*.yaml*'
-    - '.github/*'
-    - '.github/workflows/stack.yml'
-  pull_request:
-    paths:
-    - 'haskell/**'
-    - 'stack*.yaml*'
-    - '.github/*'
-    - '.github/workflows/stack.yml'
+on: [push]
 
 jobs:
   linux:
@@ -24,10 +12,13 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-haskell@v1
       with:
-        ghc-version: 8.2.2
+        ghc-version: '8.8.2'
     - name: Install dependencies
       run: |
         stack build ${ARGS} --only-dependencies
     - name: Build
       run: |
         stack build ${ARGS}
+    - name: Test
+      run: |
+        stack test ${ARGS}
