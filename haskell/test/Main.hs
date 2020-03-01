@@ -8,7 +8,7 @@ import qualified Ucd
 
 main :: IO ()
 main = do
-  results <- sequence [Properties.check, ucdTests]
+  results <- sequence [Properties.check, trueIfNoException ucdTests]
   let allChecksPass = and results
   Control.Monad.unless allChecksPass System.Exit.exitFailure
 
@@ -24,5 +24,7 @@ trueIfNoException action = do
 ucdTests :: IO Bool
 ucdTests = do
   print (Ucd.getPath Ucd.Version_12_1)
-  ucd12 <- trueIfNoException $ Ucd.loadUcd Ucd.Version_12_1
-  return ucd12
+  ucd12 <- Ucd.loadUcd Ucd.Version_12_1
+  let counts = Ucd.countBytes ucd12
+  mapM_ print $ Ucd.getNonZeroBytes counts
+  return True

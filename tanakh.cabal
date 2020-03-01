@@ -12,9 +12,11 @@ common deps
     -Wincomplete-record-updates
     -O2
   build-depends:
-      base
+      array
+    , base
     , bytestring
     , filepath
+    , lens
     , optparse-generic
     , text
 
