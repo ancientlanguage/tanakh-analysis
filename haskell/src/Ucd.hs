@@ -7,7 +7,9 @@ import Data.Array.Unboxed (UArray)
 import qualified Data.Array.Unboxed as Array
 import System.FilePath ((</>))
 
-data Version = Version_12_1
+data Version
+  = Version_12_1
+  | Version_13_0
 
 unicodeBaseDirectory :: FilePath
 unicodeBaseDirectory = "unicode"
@@ -17,6 +19,7 @@ ucdFile = "UnicodeData.txt"
 
 getSubPath :: Version -> FilePath
 getSubPath Version_12_1 = "ucd-12.1" </> ucdFile
+getSubPath Version_13_0 = "ucd-13.0" </> ucdFile
 
 getPath :: Version -> FilePath
 getPath version = unicodeBaseDirectory </> getSubPath version

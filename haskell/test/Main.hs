@@ -23,8 +23,8 @@ trueIfNoException action = do
 
 ucdTests :: IO Bool
 ucdTests = do
-  print (Ucd.getPath Ucd.Version_12_1)
-  ucd12 <- Ucd.loadUcd Ucd.Version_12_1
+  print (Ucd.getPath Ucd.Version_13_0)
+  ucd12 <- Ucd.loadUcd Ucd.Version_13_0
   let counts = Ucd.countBytes ucd12
   mapM_ print $ Ucd.getNonZeroBytes counts
   return True
