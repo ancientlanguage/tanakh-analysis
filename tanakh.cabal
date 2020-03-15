@@ -16,6 +16,7 @@ common deps
     , base
     , bytestring
     , filepath
+    , interpolate
     , lens
     , optparse-generic
     , text
@@ -24,6 +25,7 @@ library
   import: deps
   hs-source-dirs: haskell/src
   exposed-modules:
+    AsciiGraphicSet
     Ideas
     Ucd
 
