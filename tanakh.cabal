@@ -27,6 +27,7 @@ library
   exposed-modules:
     AsciiGraphicSet
     Ideas
+    Shark
     Ucd
 
 executable tanakh
