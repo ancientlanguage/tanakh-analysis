@@ -26,12 +26,22 @@ type Array e = Data.Array.Array Natural e
 -- * 0 =<  0  < 2 and
 -- * 0 =<  1  < 2
 newtype Size = Size Natural
+  deriving newtype (Eq, Ord, Num)
+
+newtype ValueNumber = ValueNumber Natural
+  deriving newtype (Eq, Ord, Num)
+
+isValidValue :: ValueNumber -> Size -> Bool
+isValidValue (ValueNumber n) (Size s) = n < s
+
+reduceValueBySize :: Size -> ValueNumber -> ValueNumber
+reduceValueBySize (Size s) (ValueNumber n) = ValueNumber (n - s)
 
 -- A Value is a number within a certain range (zero to less than size)
 -- Requirement is that  0 =<  value  < size
 data Value = Value
   { valueSize :: Size
-  , valueNumber :: Natural
+  , valueNumber :: ValueNumber
   }
 
 -- An encoding is a bijection between numbers from 0 (inclusive) to less-than 'size'.
@@ -70,10 +80,12 @@ data Encoding = Encoding
 data CaseInfo = CaseInfo
   { sizeOfCases :: Array Size
   }
+newtype CaseIndex = CaseIndex Natural
+  deriving newtype (Eq, Ord, Num)
 data CaseValue = CaseValue
   { caseInfo :: CaseInfo
-  , caseIndex :: Natural
-  , caseValue :: Natural
+  , caseIndex :: CaseIndex
+  , caseValue :: ValueNumber
   }
 
 caseInfoSize :: CaseInfo -> Size
@@ -81,6 +93,43 @@ caseInfoSize info =
   let sizeToSum (Size size) = Monoid.Sum size
       sumToSize (Monoid.Sum size) = Size size
   in sumToSize $ Foldable.fold $ fmap sizeToSum $ sizeOfCases info
+
+data ValueToCaseErrorReason
+  = ValueToCaseError_SizeMismatch
+  | ValueToCaseError_EmptyCases
+  | ValueToCaseError_TooLarge
+
+data ValueToCaseError
+  = ValueToCaseError
+    { valueToCaseErrorReason :: ValueToCaseErrorReason
+    , valueToCaseErrorCaseInfo :: CaseInfo
+    , valueToCaseErrorValue :: Value
+    }
+
+valueToCase :: CaseInfo -> Value -> Either ValueToCaseError CaseValue
+valueToCase info value =
+  let actualValueSize = valueSize value
+      expectedCaseSize = caseInfoSize info
+  in if expectedCaseSize /= actualValueSize
+      then Left $ ValueToCaseError ValueToCaseError_SizeMismatch info value
+      else valueToCaseUnchecked info value
+
+valueToCaseUnchecked :: CaseInfo -> Value -> Either ValueToCaseError CaseValue
+valueToCaseUnchecked info value =
+  let sizes :: [Size]
+      sizes = Data.Array.elems $ sizeOfCases info
+
+      -- find the case value by repeated subtraction
+      build :: [Size] -> CaseIndex -> ValueNumber
+        -> Either ValueToCaseError CaseValue
+      build [] _ _ = Left $ ValueToCaseError ValueToCaseError_TooLarge info value
+      build (s : ss) index num =
+        if isValidValue num s
+          then Right $ CaseValue info index num
+          else build ss (index + 1) (reduceValueBySize s num)
+  in case sizes of
+      [] -> Left $ ValueToCaseError ValueToCaseError_EmptyCases info value
+      _ : _ -> build sizes 0 (valueNumber value)
 
 
 -- data Product = Product { sizeOfItems :: [Size] } -- implicit in the list is the number of items
