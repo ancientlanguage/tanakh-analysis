@@ -87,8 +87,9 @@ data CaseInfo = CaseInfo
 newtype CaseIndex = CaseIndex Natural
   deriving newtype (Eq, Ord, Num)
   deriving stock (Generic)
+
 data CaseValue = CaseValue
-  { caseInfo :: CaseInfo
+  { info :: CaseInfo
   , caseIndex :: CaseIndex
   , caseValue :: ValueNumber
   }
@@ -105,8 +106,8 @@ data ValueToCaseErrorReason
 
 data ValueToCaseError
   = ValueToCaseError
-    { valueToCaseErrorReason :: ValueToCaseErrorReason
-    , valueToCaseErrorCaseInfo :: CaseInfo
-    , valueToCaseErrorValue :: Value
+    { reason :: ValueToCaseErrorReason
+    , caseInfo :: CaseInfo
+    , value :: Value
     }
   deriving (Generic)
