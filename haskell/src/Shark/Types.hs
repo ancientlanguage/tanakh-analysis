@@ -96,7 +96,6 @@ data CaseValue = CaseValue
   deriving (Generic)
 
 -- data Product = Product { sizeOfItems :: [Size] } -- implicit in the list is the number of items
--- data Array = Array { sizeOfEachElement :: Size, numberOfElements :: Natural }
 
 data ValueToCaseErrorReason
   = ValueToCaseError_SizeMismatch
@@ -111,3 +110,19 @@ data ValueToCaseError
     , value :: Value
     }
   deriving (Generic)
+
+newtype ElementCount = ElementCount Natural
+  deriving newtype (Eq, Ord, Num)
+  deriving stock (Generic)
+
+data ArrayInfo = ArrayInfo
+  { elementSize :: Size
+  , elementCount :: ElementCount
+  }
+  deriving Generic
+
+data ArrayValue = ArrayValue
+  { info :: ArrayInfo
+  , values :: InternalArray ValueNumber
+  }
+  deriving Generic

@@ -9,6 +9,7 @@ import qualified Data.Array
 import qualified Data.Foldable as Foldable
 import Data.Generics.Product (the)
 import qualified Data.Monoid as Monoid
+import Numeric.Natural (Natural)
 import Shark.TypeConstructors
 
 isValidValue :: ValueNumber -> Size -> Bool
@@ -47,3 +48,8 @@ valueToCaseUnchecked info value =
   in case sizes of
       [] -> Left $ ValueToCaseError ValueToCaseError_EmptyCases info value
       _ : _ -> build sizes 0 (value ^. the @ValueNumber)
+
+arrayInfoSize :: ArrayInfo -> Size
+arrayInfoSize info =
+  (info ^. the @"elementSize")
+    ^ (info ^. the @"elementCount" . the @Natural)

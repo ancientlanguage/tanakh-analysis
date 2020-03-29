@@ -14,5 +14,8 @@ import Shark.Types as X
     , ValueToCaseError_EmptyCases
     , ValueToCaseError_TooLarge
     ),
-    ValueToCaseError(ValueToCaseError)
+    ValueToCaseError(ValueToCaseError),
+    ArrayInfo(ArrayInfo),
+    ElementCount(ElementCount),
+    ArrayValue(ArrayValue)
   )
