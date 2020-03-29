@@ -1,11 +1,13 @@
 -- | Description: Basic language implementation
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Shark where
 
+import Control.Lens ((^.))
 import qualified Data.Array
 import qualified Data.Foldable as Foldable
+import Data.Generics.Product (the)
 import qualified Data.Monoid as Monoid
 import Shark.TypeConstructors
 import qualified Shark.Types as Shark
@@ -24,7 +26,7 @@ caseInfoSize info =
 
 valueToCase :: CaseInfo -> Value -> Either ValueToCaseError CaseValue
 valueToCase info value =
-  let actualValueSize = Shark.valueSize value
+  let actualValueSize = value ^. the @Size
       expectedCaseSize = caseInfoSize info
   in if expectedCaseSize /= actualValueSize
       then Left $ ValueToCaseError ValueToCaseError_SizeMismatch info value
@@ -45,4 +47,4 @@ valueToCaseUnchecked info value =
           else build ss (index + 1) (reduceValueBySize s num)
   in case sizes of
       [] -> Left $ ValueToCaseError ValueToCaseError_EmptyCases info value
-      _ : _ -> build sizes 0 (Shark.valueNumber value)
+      _ : _ -> build sizes 0 (value ^. the @ValueNumber)
