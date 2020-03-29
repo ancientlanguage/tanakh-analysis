@@ -10,7 +10,6 @@ import qualified Data.Foldable as Foldable
 import Data.Generics.Product (the)
 import qualified Data.Monoid as Monoid
 import Shark.TypeConstructors
-import qualified Shark.Types as Shark
 
 isValidValue :: ValueNumber -> Size -> Bool
 isValidValue (ValueNumber n) (Size s) = n < s
@@ -22,7 +21,7 @@ caseInfoSize :: CaseInfo -> Size
 caseInfoSize info =
   let sizeToSum (Size size) = Monoid.Sum size
       sumToSize (Monoid.Sum size) = Size size
-  in sumToSize $ Foldable.fold $ fmap sizeToSum $ Shark.sizeOfCases info
+  in sumToSize $ Foldable.fold $ fmap sizeToSum $ info ^. the @"sizes"
 
 valueToCase :: CaseInfo -> Value -> Either ValueToCaseError CaseValue
 valueToCase info value =
@@ -35,7 +34,7 @@ valueToCase info value =
 valueToCaseUnchecked :: CaseInfo -> Value -> Either ValueToCaseError CaseValue
 valueToCaseUnchecked info value =
   let sizes :: [Size]
-      sizes = Data.Array.elems $ Shark.sizeOfCases info
+      sizes = Data.Array.elems $ info ^. the @"sizes"
 
       -- find the case value by repeated subtraction
       build :: [Size] -> CaseIndex -> ValueNumber

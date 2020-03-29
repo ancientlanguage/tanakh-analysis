@@ -1,6 +1,7 @@
 -- | Description: Basic language implementation
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Shark.Types where
@@ -70,8 +71,8 @@ data Value = Value
 -- [2,0,1]
 -- [2,1,0]
 data Encoding = Encoding
-  { encodingSize :: Size
-  , encodingList :: InternalArray Natural
+  { size :: Size
+  , values :: InternalArray Natural
     -- ^ Must be an array of size 'encodingSize'
     -- and each element must be unique,
     -- and each element must be in the range 0 <= elem < 'encodingSize'
@@ -79,7 +80,7 @@ data Encoding = Encoding
   deriving (Generic)
 
 data CaseInfo = CaseInfo
-  { sizeOfCases :: InternalArray Size
+  { sizes :: InternalArray Size
   }
   deriving (Generic)
 
