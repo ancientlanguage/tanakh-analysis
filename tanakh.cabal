@@ -29,7 +29,7 @@ library
     AsciiGraphicSet
     Ideas
     Shark
-    Shark.TypeConstructors
+    Shark.TypeDefinitions
     Shark.Types
     Ucd
 

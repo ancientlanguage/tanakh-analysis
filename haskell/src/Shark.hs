@@ -10,7 +10,7 @@ import qualified Data.Foldable as Foldable
 import Data.Generics.Product (the)
 import qualified Data.Monoid as Monoid
 import Numeric.Natural (Natural)
-import Shark.TypeConstructors
+import Shark.Types
 
 isValidValue :: ValueNumber -> Size -> Bool
 isValidValue (ValueNumber n) (Size s) = n < s
