@@ -26,11 +26,9 @@ caseInfoSize info =
 
 valueToCase :: CaseInfo -> Value -> Either ValueToCaseError CaseValue
 valueToCase info value =
-  let actualValueSize = value ^. the @Size
-      expectedCaseSize = caseInfoSize info
-  in if expectedCaseSize /= actualValueSize
-      then Left $ ValueToCaseError ValueToCaseError_SizeMismatch info value
-      else valueToCaseUnchecked info value
+  if value ^. the @Size /= caseInfoSize info
+    then Left $ ValueToCaseError ValueToCaseError_SizeMismatch info value
+    else valueToCaseUnchecked info value
 
 valueToCaseUnchecked :: CaseInfo -> Value -> Either ValueToCaseError CaseValue
 valueToCaseUnchecked info value =
@@ -53,3 +51,13 @@ arrayInfoSize :: ArrayInfo -> Size
 arrayInfoSize info =
   (info ^. the @"elementSize")
     ^ (info ^. the @"elementCount" . the @Natural)
+
+valueToArray :: ArrayInfo -> Value -> Either ValueToArrayError ArrayValue
+valueToArray info value =
+  if value ^. the @Size /= arrayInfoSize info
+    then Left $ ValueToArrayError ValueToArrayError_SizeMismatch info value
+    else valueToArrayUnchecked info value
+
+valueToArrayUnchecked :: ArrayInfo -> Value
+  -> Either ValueToArrayError ArrayValue
+valueToArrayUnchecked _info = error "not implemented"

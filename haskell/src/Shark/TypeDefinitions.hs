@@ -1,4 +1,5 @@
 -- | Description: Type definitions for basic Shark language implementation.
+-- It is expected to import the 'Shark.Types' module unqualified and not use this one.
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DuplicateRecordFields #-}
@@ -124,5 +125,16 @@ data ArrayInfo = ArrayInfo
 data ArrayValue = ArrayValue
   { info :: ArrayInfo
   , values :: InternalArray ValueNumber
+  }
+  deriving Generic
+
+data ValueToArrayErrorReason
+  = ValueToArrayError_SizeMismatch
+  | ValueToArrayError_NotDivisibleByElementSize ValueNumber
+
+data ValueToArrayError = ValueToArrayError
+  { reason :: ValueToArrayErrorReason
+  , arrayInfo :: ArrayInfo
+  , value :: Value
   }
   deriving Generic

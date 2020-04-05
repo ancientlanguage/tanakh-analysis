@@ -20,5 +20,10 @@ import Shark.TypeDefinitions as X
     ValueToCaseError(ValueToCaseError),
     ArrayInfo(ArrayInfo),
     ElementCount(ElementCount),
-    ArrayValue(ArrayValue)
+    ArrayValue(ArrayValue),
+    ValueToArrayErrorReason
+    ( ValueToArrayError_SizeMismatch
+    , ValueToArrayError_NotDivisibleByElementSize
+    ),
+    ValueToArrayError(ValueToArrayError)
   )
